@@ -48,7 +48,6 @@ namespace WeCook_Api.Controllers
             }
         }
 
-        //update user   
         [HttpPut("update-user/{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserUpdateDto user)
         {
@@ -63,7 +62,6 @@ namespace WeCook_Api.Controllers
             }
         }
 
-        //get user by id
         [HttpGet("get-user-by-id/{id}")]
         public async Task<IActionResult> GetUserById(string id)
         {
@@ -78,7 +76,20 @@ namespace WeCook_Api.Controllers
             }
         }
 
-        //delete user
+        [HttpGet("get-all-users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            try
+            {
+                var res = userService.GetAllUsers();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("delete-user/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -93,7 +104,6 @@ namespace WeCook_Api.Controllers
             }
         }
 
-        //change password
         [HttpPut("change-password/{id}")]
         public async Task<IActionResult> ChangePassword(string id, [FromBody] UserChangePasswordDto user)
         {
