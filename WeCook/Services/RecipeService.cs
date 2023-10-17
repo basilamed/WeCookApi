@@ -47,6 +47,8 @@ namespace WeCook_Api.Services
                 PreporationTime = dto.PreporationTime,
                 PostingDate = DateTime.UtcNow,
                 ChefId = dto.ChefId,
+                Taste = dto.Taste,
+                Temperature = dto.Temperature,
             };
             context.Recipes.Add(recipe);
             context.SaveChanges();
@@ -66,6 +68,8 @@ namespace WeCook_Api.Services
                 recipe.Instructions = dto.Instructions;
                 recipe.Image = dto.Image;
                 recipe.PreporationTime = dto.PreporationTime;
+                recipe.Taste = dto.Taste;
+                recipe.Temperature = dto.Temperature;
 
             }
             context.SaveChanges();

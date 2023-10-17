@@ -16,5 +16,9 @@ namespace WeCook_Api.DTOs
         public string Image { get; set; }
         [Required]
         public string ChefId { get; set; }
+        [Required]
+        public bool Taste { get; set; }
+        [Required]
+        public string Temperature { get; set; }
     }
 }
