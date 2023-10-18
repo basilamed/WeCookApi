@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using System.Text.Json.Serialization;
 using WeCook.Data;
 using WeCook.Data.Models;
 using WeCook_Api.Services;
@@ -16,7 +17,13 @@ builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<FavoriteService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
+
+//builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

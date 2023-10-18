@@ -17,13 +17,34 @@ namespace WeCook_Api.Services
 
         public List<Recipe> GetAll()
         {
-            var lista = context.Recipes.ToList();
+            var lista = context.Recipes
+                .Select(recipe => new Recipe
+                {
+                    Id = recipe.Id,
+                    Title = recipe.Title,
+                    Ingredients = recipe.Ingredients,
+                    Instructions = recipe.Instructions,
+                    PreporationTime = recipe.PreporationTime,
+                    Taste = recipe.Taste,
+                    Temperature = recipe.Temperature,
+                    Image = recipe.Image,
+                    PostingDate = recipe.PostingDate,
+                    Chef = new User
+                    {
+                        FirstName = recipe.Chef.FirstName,
+                        LastName = recipe.Chef.LastName
+                    }
+                })
+                .ToList();
+
             if (lista == null)
             {
                 throw new Exception("No recipes");
             }
+
             return lista;
         }
+
         public Recipe GetRecipeById(int id)
         {
             var recipe = context.Recipes.FirstOrDefault(x => x.Id == id);
