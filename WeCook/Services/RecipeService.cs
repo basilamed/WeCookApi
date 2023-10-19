@@ -47,7 +47,7 @@ namespace WeCook_Api.Services
 
         public Recipe GetRecipeById(int id)
         {
-            var recipe = context.Recipes.FirstOrDefault(x => x.Id == id);
+            var recipe = context.Recipes.Include(u=> u.Chef).FirstOrDefault(x => x.Id == id);
             if (recipe == null)
             {
                 throw new Exception("Recipe not found");
