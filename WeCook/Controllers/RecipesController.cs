@@ -45,6 +45,20 @@ namespace WeCook_Api.Controllers
             }
         }
 
+        [HttpGet("chef/{id}")]
+        public IActionResult GetRecipesByChefId(string id)
+        {
+            try
+            {
+                List<Recipe> recipe = recipeService.GetRecipesByChefId(id);
+                return Ok(recipe);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public IActionResult AddRecipe([FromBody] AddRecipeDto recipeDto)
         {

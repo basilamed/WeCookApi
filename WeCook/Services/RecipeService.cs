@@ -56,6 +56,17 @@ namespace WeCook_Api.Services
             return recipe;
 
         }
+        public List<Recipe> GetRecipesByChefId(string id)
+        {
+            var recipe = context.Recipes.Where(x => x.ChefId == id).ToList();
+            if (recipe == null)
+            {
+                throw new Exception("Recipes not found");
+
+            }
+            return recipe;
+
+        }
 
         public Recipe AddRecipe(AddRecipeDto dto)
         {
