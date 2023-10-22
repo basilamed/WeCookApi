@@ -16,7 +16,7 @@ namespace WeCook_Api.Services
 
         public User GetFavoritesByUser(string userId)
         {
-            var lista = context.Users.Where(u => u.Id == userId).Include(x => x.FavoriteRecipes).FirstOrDefault();
+            var lista = context.Users.Where(u => u.Id == userId).Include(x => x.FavoriteRecipes).ThenInclude(r => r.Recipe).FirstOrDefault();
             if (lista == null)
             {
                 throw new Exception("No comments by user");
@@ -67,16 +67,18 @@ namespace WeCook_Api.Services
         //    }
         //}
 
-        public bool DeleteFavorite(int id)
+        public bool DeleteFavorite(AddFavoriteDto dto)
         {
-            var favorite = context.Favorites.FirstOrDefault(f => f.Id == id);
 
-            if (favorite == null)
+            var existingFavorite = context.Favorites
+               .FirstOrDefault(favorite => favorite.UserId == dto.UserId && favorite.RecipeId == dto.RecipeId);
+
+            if (existingFavorite == null)
             {
-                throw new Exception("Favorite not found");
+                throw new Exception("This recipe is not your favourite");
             }
 
-            context.Favorites.Remove(favorite);
+            context.Favorites.Remove(existingFavorite);
 
             try
             {

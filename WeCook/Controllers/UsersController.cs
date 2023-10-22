@@ -67,7 +67,7 @@ namespace WeCook_Api.Controllers
         {
             try
             {
-                var res = await userService.GetUser(id);
+                var res = userService.GetUser(id);
                 return Ok(res);
             }
             catch (Exception ex)

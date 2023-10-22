@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace WeCook_Api.Services
 {
@@ -158,9 +159,9 @@ namespace WeCook_Api.Services
             }
         }
 
-        public async Task<User> GetUser(string userId)
+        public User GetUser(string userId)
         {
-            var u = await userManager.FindByIdAsync(userId);
+            var u = context.Users.Include(c=> c.FavoriteRecipes).FirstOrDefault( m => m.Id == userId);
             if (u == null)
             {
                 throw new Exception("User not found");
