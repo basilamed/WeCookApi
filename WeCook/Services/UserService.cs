@@ -62,7 +62,7 @@ namespace WeCook_Api.Services
             {
                 var token = await userManager.GenerateEmailConfirmationTokenAsync(us);
                 var encodedToken = HttpUtility.UrlEncode(token);
-                var htmlContent = $"<h1>Welcome to Decor Studio</h1>" +
+                var htmlContent = $"<h1>Welcome to We Cook</h1>" +
                     $"<h3>Please click " +
                  $"<a href=\"{configuration.GetSection("ClientAppUrl").Value}/verify/{us.UserName}/{us.SecurityStamp}\">here</a>" +
                  $" to confirm your account</h3>";
@@ -171,7 +171,7 @@ namespace WeCook_Api.Services
 
         public List<User> GetAllUsers()
         {
-            var u = context.Users.ToList();
+            var u = context.Users.Where(u => u.Approved == true && u.RoleId != 1).ToList();
             if (u == null)
             {
                 throw new Exception("No users");
@@ -179,6 +179,30 @@ namespace WeCook_Api.Services
             return u;
         }
 
+        public List<User> GetAllUnapprovedUsers()
+        {
+            var u = context.Users.Where(a=> a.Approved == false).ToList();
+            if (u == null)
+            {
+                throw new Exception("No unapproved users");
+            }
+            return u;
+        }
+        public User ApproveUser(string id)
+        {
+            var u = context.Users.FirstOrDefault(u => u.Id == id);
+            if (u == null)
+            {
+                throw new Exception("User does not exist");
+            }
+            if (u.Approved == true)
+            {
+                throw new Exception("User already approved");
+            }
+            u.Approved = true;
+            context.SaveChanges();
+            return u;
+        }
         public async Task<User> UpdateUser(string userId, UserUpdateDto user)
         {
             var u = await userManager.FindByIdAsync(userId);

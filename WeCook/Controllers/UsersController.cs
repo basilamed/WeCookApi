@@ -75,6 +75,19 @@ namespace WeCook_Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPut("approve-user/{id}")]
+        public IActionResult ApproveUser(string id)
+        {
+            try
+            {
+                var res = userService.ApproveUser(id);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("get-all-users")]
         public async Task<IActionResult> GetAllUsers()
@@ -82,6 +95,20 @@ namespace WeCook_Api.Controllers
             try
             {
                 var res = userService.GetAllUsers();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("get-all-unapproved-users")]
+        public async Task<IActionResult> GetAllUnapprovedUsers()
+        {
+            try
+            {
+                var res = userService.GetAllUnapprovedUsers();
                 return Ok(res);
             }
             catch (Exception ex)
