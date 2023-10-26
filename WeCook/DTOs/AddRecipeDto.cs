@@ -11,7 +11,7 @@ namespace WeCook_Api.DTOs
         [Required]
         public string Instructions { get; set; }
         [Required]
-        public string PreporationTime { get; set; }
+        public int PreporationTime { get; set; }
         [Required]
         public string Image { get; set; }
         [Required]
@@ -19,6 +19,6 @@ namespace WeCook_Api.DTOs
         [Required]
         public bool Taste { get; set; }
         [Required]
-        public string Temperature { get; set; }
+        public int Temperature { get; set; }
     }
 }

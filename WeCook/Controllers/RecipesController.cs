@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WeCook.Contracts.Models;
 using WeCook.Data.Models;
 using WeCook_Api.DTOs;
 using WeCook_Api.Services;
@@ -18,11 +19,11 @@ namespace WeCook_Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllRecipes()
+        public async Task<IActionResult> GetAllRecipes([FromQuery] RecipeQuery dto)
         {
             try
             {
-                List<Recipe> recipes = recipeService.GetAll();
+                var recipes = await recipeService.GetAll(dto);
                 return Ok(recipes);
             }
             catch (Exception ex)

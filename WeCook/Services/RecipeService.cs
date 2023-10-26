@@ -3,6 +3,11 @@ using System.ComponentModel;
 using WeCook.Data;
 using WeCook.Data.Models;
 using WeCook_Api.DTOs;
+using WeCook.Contracts.Models;
+using Azure.Core;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace WeCook_Api.Services
 {
@@ -15,34 +20,52 @@ namespace WeCook_Api.Services
             this.context = context;
         }
 
-        public List<Recipe> GetAll()
+        public async Task<QueryResultsDto<Recipe>> GetAll([FromQuery] RecipeQuery request)
         {
             var lista = context.Recipes
-                .Select(recipe => new Recipe
-                {
-                    Id = recipe.Id,
-                    Title = recipe.Title,
-                    Ingredients = recipe.Ingredients,
-                    Instructions = recipe.Instructions,
-                    PreporationTime = recipe.PreporationTime,
-                    Taste = recipe.Taste,
-                    Temperature = recipe.Temperature,
-                    Image = recipe.Image,
-                    PostingDate = recipe.PostingDate,
-                    Chef = new User
-                    {
-                        FirstName = recipe.Chef.FirstName,
-                        LastName = recipe.Chef.LastName
-                    }
-                })
-                .ToList();
+                .Include(c => c.Chef)
+                .AsQueryable();
 
             if (lista == null)
             {
                 throw new Exception("No recipes");
             }
+            if (request.DateOfPosting.HasValue)
+            {
+                DateTime dateOfPosting = request.DateOfPosting.Value.Date;
 
-            return lista;
+                lista = lista.Where(a => a.PostingDate.Date == dateOfPosting);
+            }
+            if (request.TimeToCook.HasValue)
+            {
+                lista = lista.Where(a => a.PreporationTime == request.TimeToCook);
+            }
+            if (request.Temperature.HasValue)
+            {
+                lista = lista.Where(a => a.Temperature == request.Temperature);
+            }
+            var sortColumns = new Dictionary<string, Expression<Func<Recipe, object>>>()
+            {
+                ["PostingDate"] = c => c.PostingDate
+            };
+            Expression<Func<Recipe, object>> selectedColumn = null;
+            if (!string.IsNullOrEmpty(request.SortBy) && sortColumns.ContainsKey(request.SortBy))
+            {
+                selectedColumn = sortColumns[request.SortBy];
+            }
+            var totalCount = await lista.CountAsync();
+
+            lista = lista.ApplySorting(request, sortColumns);
+            lista = lista.ApplyPaging(request);
+
+            var list = lista.ToList();
+            QueryResultsDto<Recipe> result = new QueryResultsDto<Recipe>
+            {
+                TotalItems = totalCount,
+                Items = list
+            };
+
+            return result;
         }
 
         public Recipe GetRecipeById(int id)
