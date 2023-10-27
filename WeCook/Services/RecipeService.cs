@@ -8,6 +8,8 @@ using Azure.Core;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Data.SqlClient;
 
 namespace WeCook_Api.Services
 {
@@ -22,43 +24,61 @@ namespace WeCook_Api.Services
 
         public async Task<QueryResultsDto<Recipe>> GetAll([FromQuery] RecipeQuery request)
         {
-            var lista = context.Recipes
+            var query = context.Recipes
                 .Include(c => c.Chef)
                 .AsQueryable();
 
-            if (lista == null)
+            if (query == null)
             {
                 throw new Exception("No recipes");
             }
+
             if (request.DateOfPosting.HasValue)
             {
                 DateTime dateOfPosting = request.DateOfPosting.Value.Date;
-
-                lista = lista.Where(a => a.PostingDate.Date == dateOfPosting);
+                query = query.Where(a => a.PostingDate.Date == dateOfPosting);
             }
+
             if (request.TimeToCook.HasValue)
             {
-                lista = lista.Where(a => a.PreporationTime == request.TimeToCook);
+                query = query.Where(a => a.PreporationTime <= request.TimeToCook);
             }
+
             if (request.Temperature.HasValue)
             {
-                lista = lista.Where(a => a.Temperature == request.Temperature);
+                query = query.Where(a => a.Temperature <= request.Temperature);
             }
+
+            if (!string.IsNullOrEmpty(request.Ingredients))
+            {
+                string[] ingredientsArray = request.Ingredients.Split(',');
+
+                foreach (var ingredient in ingredientsArray)
+                {
+                    string trimmedIngredient = "%" + ingredient.Trim() + "%";
+                    query = query.Where(a => EF.Functions.Like(a.Ingredients, trimmedIngredient));
+                }
+            }
+
             var sortColumns = new Dictionary<string, Expression<Func<Recipe, object>>>()
             {
                 ["PostingDate"] = c => c.PostingDate
             };
+
             Expression<Func<Recipe, object>> selectedColumn = null;
+
             if (!string.IsNullOrEmpty(request.SortBy) && sortColumns.ContainsKey(request.SortBy))
             {
                 selectedColumn = sortColumns[request.SortBy];
             }
-            var totalCount = await lista.CountAsync();
 
-            lista = lista.ApplySorting(request, sortColumns);
-            lista = lista.ApplyPaging(request);
+            var totalCount =  query.Count();
 
-            var list = lista.ToList();
+            query = query.ApplySorting(request, sortColumns);
+            query = query.ApplyPaging(request);
+
+            var list = query.ToList();
+
             QueryResultsDto<Recipe> result = new QueryResultsDto<Recipe>
             {
                 TotalItems = totalCount,
