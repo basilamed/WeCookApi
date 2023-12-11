@@ -17,11 +17,14 @@ namespace WeCook_Api.Services
         private readonly UserManager<User> userManager;
         private IConfiguration configuration;
         private readonly AppDbContext context;
-        public UserService(UserManager<User> userManager, IConfiguration configuration, AppDbContext context)
+        private readonly IBackgroundJobsService _backgroundJobClient;
+
+        public UserService(UserManager<User> userManager, IConfiguration configuration, AppDbContext context, IBackgroundJobsService backgroundJobClient)
         {
             this.userManager = userManager;
             this.configuration = configuration;
             this.context = context;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         public async Task<bool> Register(UserRegisterDto user)
@@ -66,7 +69,10 @@ namespace WeCook_Api.Services
                     $"<h3>Please click " +
                  $"<a href=\"{configuration.GetSection("ClientAppUrl").Value}/verify/{us.UserName}/{us.SecurityStamp}\">here</a>" +
                  $" to confirm your account</h3>";
-                SendEmail(us, "Verify your account", htmlContent).Wait();
+                var link = $"{configuration.GetSection("URL").Value}/api/Users/verify/{us.UserName}/{us.SecurityStamp}";
+                
+                await _backgroundJobClient.SendEmail(user.UserName, link);
+                //SendEmail(us, "Verify your account", htmlContent).Wait();
                 return true;
             }
             else
@@ -74,7 +80,7 @@ namespace WeCook_Api.Services
                 return false;
             }
         }
-        public async Task<bool> Verify(string token, string email)
+        public async Task<bool> Verify(string email, string token)
         {
             var user = await userManager.FindByEmailAsync(email);
             if (user != null)

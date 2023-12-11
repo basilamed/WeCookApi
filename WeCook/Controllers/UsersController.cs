@@ -145,12 +145,12 @@ namespace WeCook_Api.Controllers
             }
         }
 
-        [HttpGet("verify")]
-        public async Task<IActionResult> VerifyEmail(string userId, string token)
+        [HttpGet("verify/{userEmail}/{token}")]
+        public async Task<IActionResult> VerifyEmail(string userEmail, string token)
         {
             try
             {
-                var res = await userService.Verify(token, userId);
+                var res = await userService.Verify(userEmail, token);
                 return Ok(res);
             }
             catch (Exception ex)
