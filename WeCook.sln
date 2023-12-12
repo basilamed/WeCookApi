@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeCook.Data", "WeCook.Data\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeCook.Contracts", "WeCook.Contracts\WeCook.Contracts.csproj", "{789B0B43-CE5E-49BE-8842-AFE11F60C841}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeCook_Gateway", "WeCook_Gateway\WeCook_Gateway.csproj", "{821A4A2D-9B31-4907-982C-3DD0A7763935}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{789B0B43-CE5E-49BE-8842-AFE11F60C841}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{789B0B43-CE5E-49BE-8842-AFE11F60C841}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{789B0B43-CE5E-49BE-8842-AFE11F60C841}.Release|Any CPU.Build.0 = Release|Any CPU
+		{821A4A2D-9B31-4907-982C-3DD0A7763935}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{821A4A2D-9B31-4907-982C-3DD0A7763935}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{821A4A2D-9B31-4907-982C-3DD0A7763935}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{821A4A2D-9B31-4907-982C-3DD0A7763935}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

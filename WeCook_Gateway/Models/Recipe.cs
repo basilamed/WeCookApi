@@ -1,0 +1,19 @@
+﻿namespace WeCook_Gateway.Models
+{
+    public class Recipe
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Ingredients { get; set; }
+        public string Instructions { get; set; }
+        public int PreporationTime { get; set; }
+        public bool Taste { get; set; }
+        public int Temperature { get; set; }
+        public string? Image { get; set; }
+        public DateTime PostingDate { get; set; }
+        public string ChefId { get; set; }
+        public User Chef { get; set; }
+        public List<Comment> Comments { get; set; }
+        public List<Favorite> FavoritedByUsers { get; set; }
+    }
+}

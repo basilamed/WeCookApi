@@ -160,6 +160,68 @@ namespace WeCook_Api.Controllers
         }
 
 
+        [HttpGet("request-chef/{id}")]
+        public async Task<IActionResult> RequestChef(string id)
+        {
+            try
+            {
+                var res = await userService.RequestToBeChef(id);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //get all users that requested to be chefs
+        [HttpGet("get-all-chef-requests")]
+        public async Task<IActionResult> GetAllChefRequests()
+        {
+            try
+            {
+                var res = userService.GetAllRequestedToBeChef();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //approve chef request
+
+        [HttpGet("approve-chef-request/{id}")]
+        public async Task<IActionResult> ApproveChefRequest(string id)
+        {
+            try
+            {
+                var res = await userService.ApproveChef(id);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //disapprove chef request
+
+        [HttpGet("disapprove-chef-request/{id}")]
+        public async Task<IActionResult> DisapproveChefRequest(string id)
+        {
+            try
+            {
+                var res = await userService.DisapproveChef(id);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
        
     }
 }

@@ -78,12 +78,12 @@ namespace WeCook_Api.Controllers
         {
             try
             {
-                bool result = commentService.DeleteComment(id);
-                if (result)
+                var result = commentService.DeleteComment(id);
+                if (result != null)
                 {
-                    return Ok("Comment deleted successfully.");
+                    return Ok(result);
                 }
-                return NotFound("Comment not found.");
+                return NotFound(result);
             }
             catch (Exception ex)
             {

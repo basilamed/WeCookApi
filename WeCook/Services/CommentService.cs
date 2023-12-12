@@ -59,7 +59,7 @@ namespace WeCook_Api.Services
             return c;
 
         }
-        public bool DeleteComment(int id)
+        public Comment DeleteComment(int id)
         {
             var c = context.Comments.FirstOrDefault(r => r.Id == id);
 
@@ -73,7 +73,7 @@ namespace WeCook_Api.Services
             try
             {
                 context.SaveChanges();
-                return true;
+                return c;
             }
             catch (DbUpdateException ex)
             {

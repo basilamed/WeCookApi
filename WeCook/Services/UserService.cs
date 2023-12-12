@@ -103,6 +103,65 @@ namespace WeCook_Api.Services
             }
         }
 
+        public async Task<bool> RequestToBeChef(string userId)
+        {
+            var u = await userManager.FindByIdAsync(userId);
+            if (u == null)
+            {
+                throw new Exception("User not found");
+            }
+            if (u.RoleId == 3)
+            {
+                throw new Exception("User already chef");
+            }
+            u.RequestedToBeChef = !u.RequestedToBeChef;
+            context.SaveChanges();
+            return true;
+        }
+
+        public async Task<bool> ApproveChef(string userId)
+        {
+            var u = await userManager.FindByIdAsync(userId);
+            if (u == null)
+            {
+                throw new Exception("User not found");
+            }
+            if (u.RoleId == 3)
+            {
+                throw new Exception("User already chef");
+            }
+            u.RoleId = 3;
+            u.RequestedToBeChef = false;
+            context.SaveChanges();
+            return true;
+        }
+
+        public List<User> GetAllRequestedToBeChef()
+        {
+            var u = context.Users.Where(u => u.RequestedToBeChef == true).ToList();
+            if (u == null)
+            {
+                throw new Exception("No users");
+            }
+            return u;
+        }
+
+        public async Task<bool> DisapproveChef(string userId)
+        {
+            var u = await userManager.FindByIdAsync(userId);
+            if (u == null)
+            {
+                throw new Exception("User not found");
+            }
+            if (u.RoleId == 3)
+            {
+                throw new Exception("User already chef");
+            }
+            u.RequestedToBeChef = false;
+            context.SaveChanges();
+            return true;
+        }
+
         public async Task<object> Login(UserLoginDto user)
         {
             var u = await userManager.FindByNameAsync(user.UserName);
