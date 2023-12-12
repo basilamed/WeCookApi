@@ -80,7 +80,7 @@ namespace WeCook_Api.Services
                 return false;
             }
         }
-        public async Task<bool> Verify(string email, string token)
+        public async Task<String> Verify(string email, string token)
         {
             var user = await userManager.FindByEmailAsync(email);
             if (user != null)
@@ -90,7 +90,7 @@ namespace WeCook_Api.Services
                     user.IsEmailConfirmed = true;
                     await context.SaveChangesAsync();
                     await userManager.UpdateAsync(user);
-                    return true;
+                    return "You have successfully verified you email";
                 }
                 else
                 {
