@@ -32,6 +32,20 @@ namespace WeCook_Api.Controllers
             }
         }
 
+        [HttpGet("rating/{id}")]
+        public IActionResult GetRating(int id)
+        {
+            try
+            {
+                double rating = recipeService.GetRating(id);
+                return Ok(rating);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetRecipeById(int id)
         {

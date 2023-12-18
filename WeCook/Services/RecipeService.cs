@@ -99,6 +99,24 @@ namespace WeCook_Api.Services
             return recipe;
 
         }
+        //by the recipe id get all the rating from the Comments and get average
+        public double GetRating(int id)
+        {
+            var recipe = context.Recipes.Include(c => c.Comments).FirstOrDefault(x => x.Id == id);
+            if (recipe == null)
+            {
+                throw new Exception("Recipe not found");
+
+            }
+            double sum = 0;
+            foreach (var comment in recipe.Comments)
+            {
+                sum += comment.Rating;
+            }
+            double average = sum / recipe.Comments.Count;
+            return average;
+
+        }   
         public List<Recipe> GetRecipesByChefId(string id)
         {
             var recipe = context.Recipes.Where(x => x.ChefId == id).ToList();

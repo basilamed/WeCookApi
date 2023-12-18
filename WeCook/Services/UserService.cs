@@ -35,7 +35,7 @@ namespace WeCook_Api.Services
                 throw new Exception("User already exists");
             }
             User us = new User();
-            if (user.RoleId == 2)
+            if (user.RoleId == 3)
             {
                 us = new User
                 {
@@ -47,7 +47,7 @@ namespace WeCook_Api.Services
                     Approved = true
                 };
             }
-            else if (user.RoleId != 2)
+            else if (user.RoleId != 3)
             {
                 us = new User
                 {

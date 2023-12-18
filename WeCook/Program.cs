@@ -35,7 +35,17 @@ builder.Services.AddTransient<IBackgroundJobsService, BackgroundJobsService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    options.UseSqlServer(connectionString, sqlServerOptions =>
+    {
+        // Configure retry policies
+        sqlServerOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,   // Maximum number of retries
+            maxRetryDelay: TimeSpan.FromSeconds(30),  // Maximum delay between retries
+            errorNumbersToAdd: null  // SQL Server error numbers to consider as transient
+        );
+    });
 });
 
 
